@@ -1,0 +1,22 @@
+{
+  "nntime.com": {
+    "name": "New Net TIME",
+    "url": "http://nntime.com/",
+    "content": {
+      "block": "table",
+      "id": "proxylist",
+      "class": null,
+      "inside": "td"
+    },
+    "page": {
+      "block": "div",
+      "class": null,
+      "id": "navigation",
+      "inside": "a",
+      "url": "proxy-list-{}.htm",
+      "format": {
+        "numbers": 2
+      }
+    }
+  }
+}
