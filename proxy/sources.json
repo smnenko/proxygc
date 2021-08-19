@@ -3,20 +3,47 @@
     "name": "New Net TIME",
     "url": "http://nntime.com/",
     "content": {
-      "block": "table",
+      "url": "http://nntime.com/proxy-list-{}.htm",
       "id": "proxylist",
       "class": null,
-      "inside": "td"
+      "inside": "td",
+      "regular_ip": "(?<=\\<td\\>)\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(?=<script)",
+      "regular_port": "(?<=script\\>)\\:\\d{2,5}(?=<\\/td)",
+      "format": 2
     },
     "page": {
       "block": "div",
-      "class": null,
       "id": "navigation",
-      "inside": "a",
-      "url": "proxy-list-{}.htm",
-      "format": {
-        "numbers": 2
-      }
+      "inside": "a"
+    }
+  },
+  "free-proxy.cz": {
+    "name": "Free-Proxy.cz",
+    "url": "http://free-proxy.cz/",
+    "content": {
+      "url": "http://free-proxy.cz/ru/proxylist/main/{}",
+      "id": "proxy_list",
+      "class": null,
+      "inside": "td",
+      "regular_ip": "(?<=\\<\\/script\\>)\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(?=<\\/td)",
+      "regular_port": "(?<=style=\\\"\\\"\\>)\\d{2,5}(?=<\\/span)"
+    },
+    "page": {
+      "block": "div",
+      "class": "paginator",
+      "inside": "a"
+    }
+  },
+  "free-proxy-list.net": {
+    "name": "Free Proxy List",
+    "url": "https://free-proxy-list.net/",
+    "content": {
+      "url": "https://free-proxy-list.net/",
+      "id": "proxylisttable",
+      "class": null,
+      "inside": "td",
+      "regular_ip": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
+      "regular_port": "(?<=\\<td\\>)\\d{2,5}(?=\\<\\/td\\>)"
     }
   }
 }

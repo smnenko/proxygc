@@ -12,9 +12,15 @@ from .config import Color
 
 class ProxyGrabber:
     sources = json.load(open(Path().absolute().joinpath('proxy').joinpath('sources.json'), mode='r', encoding='utf-8'))
-    # driver = webdriver.Chrome()
+    proxies = set()
 
-    def __init__(self):
+    def __init__(self, file):
+        self.file = file
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument('headless')
+        self.options.add_argument('window-size=1920x1080')
+        self.options.add_argument('disable-gpu')
+        self.driver = webdriver.Chrome('chromedriver', chrome_options=self.options)
         print(Color.FAIL + 'ProxyGrabber initialized' + Color.ENDC)
 
     def _check_is_available(self, url):
@@ -22,8 +28,47 @@ class ProxyGrabber:
 
     def _get_last_page(self, html, page):
         soup = BeautifulSoup(html, 'lxml')
-        pages = soup.find(page['block'], id=page['id'], class_=page['class']).find_all(page['inside'])
-        return [i.text for i in pages if i.text.isdigit()][-1]
+        pages = None
+        if 'class' in page and page.get('class'):
+            pages = soup.find(page['block'], class_=page['class']).find_all(page['inside'])
+        elif 'id' in page and page.get('id'):
+            pages = soup.find(page['block'], id=page['id']).find_all(page['inside'])
+
+        return int([i.text for i in pages if i.text.isdigit()][-1])
+
+    def _parse_per_page(self, url, content):
+        block, proxies, ports = None, None, None
+        self.driver.get(url)
+        soup = BeautifulSoup(self.driver.page_source, 'lxml')
+        if 'class' in content and content.get('class'):
+            block = soup.find(class_=content['class'])
+        elif 'id' in content and content.get('id'):
+            block = soup.find(id=content['id'])
+
+        if block:
+            blocks = block.find_all(content['inside'])
+            if blocks:
+                proxies = re.findall(content['regular_ip'], str(blocks))
+                ports = re.findall(content['regular_port'], str(blocks))
+                return [f'{i[0]}{i[1]}' for i in zip(proxies, ports)]
+        else:
+            return
+
+    def _parse_all_pages(self, content, last_page=1):
+        for page in range(1, last_page + 1):
+            if '{}' in content['url']:
+                if 'format' in content:
+                    page = self._convert_page_to_numbers(page, content['format'])
+                proxies_list = self._parse_per_page(
+                    content['url'].format(page), content)
+            else:
+                proxies_list = self._parse_per_page(content['url'], content)
+            if proxies_list:
+                self.proxies.update(proxies_list)
+        return Color.OKGREEN + 'SUCCESS' + Color.ENDC
+
+    def _convert_page_to_numbers(self, page, numbers):
+        return f'{page:0={numbers}d}'
 
     def start(self):
         print(f'Available {len(self.sources)} sites in base')
@@ -33,7 +78,11 @@ class ProxyGrabber:
             response = self._check_is_available(value['url'])
             if response.status_code == 200:
                 print(Color.OKGREEN + '[OK]' + Color.ENDC, end=' ')
-                last_page = self._get_last_page(response.content, value['page'])
-                print(f"PAGES: {last_page}", end=' ')
+                if 'page' in value:
+                    last_page = self._get_last_page(response.content, value['page'])
+                    print(f"PAGES: {last_page}", end=' ')
+                print(self._parse_all_pages(value['content'], last_page))
+                for proxy in self.proxies:
+                    self.file.write(f'{proxy}\n')
             else:
                 print('[ERROR]')

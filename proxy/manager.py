@@ -23,7 +23,7 @@ class ProxyManager:
 
     def run(self):
         if self.choice.isdigit() and int(self.choice) in AVAILABLE_OPTIONS:
-            return AVAILABLE_OPTIONS[int(self.choice)]['class']().start()
+            return AVAILABLE_OPTIONS[int(self.choice)]['class'](open('proxy.txt', mode='w', encoding='utf-8')).start()
         raise Exception('Invalid input')
 
     @classmethod
