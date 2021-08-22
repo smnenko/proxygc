@@ -99,6 +99,4 @@ class ProxyGrabber:
     def start(self):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.grab())
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.session.close()
+        loop.close()

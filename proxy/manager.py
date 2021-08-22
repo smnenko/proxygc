@@ -21,9 +21,14 @@ class ProxyManager:
     def set_choice(self, choice):
         self.choice = choice
 
+    def open_file(self):
+        if int(self.choice) == 1:
+            return open('proxy.txt', mode='w', encoding='utf-8')
+        return open('proxy.txt', mode='r', encoding='utf-8')
+
     def run(self):
         if self.choice.isdigit() and int(self.choice) in AVAILABLE_OPTIONS:
-            return AVAILABLE_OPTIONS[int(self.choice)]['class'](open('proxy.txt', mode='w', encoding='utf-8')).start()
+            return AVAILABLE_OPTIONS[int(self.choice)]['class'](self.open_file()).start()
         raise Exception('Invalid input')
 
     @classmethod

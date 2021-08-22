@@ -25,7 +25,7 @@ if __name__ == '__main__':
     print('Available options:')
     manager.available_options()
     # manager.set_choice(input('\nEnter what you would like to do: '))
-    manager.set_choice('1')
+    manager.set_choice('2')
     tic = time.perf_counter()
     manager.run()
     toc = time.perf_counter()
