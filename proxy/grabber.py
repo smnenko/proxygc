@@ -3,7 +3,6 @@ import asyncio
 import re
 from pathlib import Path
 
-import requests
 import aiohttp
 from aiohttp.client_exceptions import ClientConnectionError
 from bs4 import BeautifulSoup
