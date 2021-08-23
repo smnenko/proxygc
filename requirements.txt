@@ -8,8 +8,6 @@ charset-normalizer==2.0.4
 idna==3.2
 lxml==4.6.3
 multidict==5.1.0
-python-socks==1.2.4
-requests==2.26.0
 selenium==3.141.0
 soupsieve==2.2.1
 typing-extensions==3.10.0.0
