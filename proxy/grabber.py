@@ -14,7 +14,6 @@ from .config import Color
 
 class ProxyGrabber:
     sources = json.load(open(Path().absolute().joinpath('proxy').joinpath('sources.json'), mode='r', encoding='utf-8'))
-    session = aiohttp.ClientSession()
     proxies = set()
 
     def __init__(self, file):
@@ -28,7 +27,8 @@ class ProxyGrabber:
 
     async def _check_is_available(self, url):
         try:
-            response = await self.session.get(url)
+            with aiohttp.ClientSession() as session:
+                response = await session.get(url)
         except ClientConnectionError as ex:
             return None
         if response and response.status == 200:
