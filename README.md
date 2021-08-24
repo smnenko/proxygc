@@ -23,3 +23,6 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
+### Screenshots
+- Main
+![Main](https://github.com/smnenko/proxygc/blob/master/docs/main.png)
