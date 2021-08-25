@@ -26,13 +26,13 @@ class ProxyGrabber:
 
     async def _check_is_available(self, url):
         try:
-            with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession() as session:
                 response = await session.get(url)
+                if response and response.status == 200:
+                    print(Color.OKGREEN + '[OK]' + Color.ENDC, end=' ')
+                    return response
         except ClientConnectionError as ex:
             return None
-        if response and response.status == 200:
-            print(Color.OKGREEN + '[OK]' + Color.ENDC, end=' ')
-            return response
 
     async def _get_last_page(self, html, page):
         soup = BeautifulSoup(html, 'lxml')

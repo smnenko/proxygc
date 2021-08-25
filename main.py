@@ -28,4 +28,4 @@ if __name__ == '__main__':
     tic = time.perf_counter()
     manager.run()
     toc = time.perf_counter()
-    print(f'Program finished by {toc - tic:0.4f} seconds')
+    print(f'\nProgram finished by {toc - tic:0.4f} seconds')
